@@ -30,8 +30,16 @@ function openProject(card){mv.src=card.dataset.video;mt.textContent=card.dataset
 function closeProject(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');mv.pause();mv.removeAttribute('src');mv.load();document.body.style.overflow=''}
 $$('.project,.open-project').forEach(el=>el.addEventListener('click',e=>{if(e.target.closest('.open-project')||el.classList.contains('project'))openProject(el.closest('.project')||el)}));
 $('.hero-play').addEventListener('click',()=>openProject({dataset:{video:'assets/EDIT.mp4',title:'Coca-Cola Concept',cat:'PRODUCT / MOTION / SHORT-FORM'}}));
-$('.modal-close').addEventListener('click',closeProject);modal.addEventListener('click',e=>{if(e.target===modal)closeProject()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProject()});
+$('.modal-close').addEventListener('click',closeProject);modal.addEventListener('click',e=>{if(e.target===modal)closeProject()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeProject();closeStartDialog()}});
 
+// Start-a-project confirmation.
+const startDialog=$('#startDialog'), dialogYes=$('#dialogYes'), dialogNo=$('#dialogNo');
+function openStartDialog(){startDialog.classList.add('open');startDialog.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function closeStartDialog(){startDialog.classList.remove('open');startDialog.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+$$('.start-project').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();openStartDialog()}));
+dialogYes?.addEventListener('click',()=>{closeStartDialog();setTimeout(()=>$('#contact')?.scrollIntoView({behavior:'smooth'}),80)});
+dialogNo?.addEventListener('click',closeStartDialog);
+startDialog?.addEventListener('click',e=>{if(e.target===startDialog)closeStartDialog()});
 // Request form.
 $('#requestForm').addEventListener('submit',e=>{e.preventDefault();const d=new FormData(e.currentTarget);const subject=encodeURIComponent('Editing request from '+d.get('name'));const body=encodeURIComponent(`Name: ${d.get('name')}\nEmail: ${d.get('email')}\n\nProject brief:\n${d.get('message')}`);window.location.href=`mailto:duskfacts@gmail.com?subject=${subject}&body=${body}`});
 
