@@ -2,6 +2,6 @@ GITHUB PROJECT GUIDE
 
 Put your MP4 files in the assets folder, then edit the PROJECTS array in script.js.
 Example:
-{ file: "my-edit.mp4", title: "My Gaming Edit", category: "Gaming" }
+{ const PROJECTS.mp4", title: "White Wonder", category: "Gaming" }, {file: "patipolio.mp4", title: "Patipolio Edit", category: "YouTube" }, {file: "portfolio.mp4", title: "Film Edit", category: "Motion Graphics" }, {file: "potopolio.mp4", title: "Potopolio Edit", category: "Shorts" } ]; }
 
 GitHub Pages cannot run PHP, so this version uses JavaScript instead.
