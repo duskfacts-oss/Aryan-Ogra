@@ -14,12 +14,7 @@
 <body>
   <div class="loader" id="loader"><div class="loader-mark">AO<span>.</span></div><div class="loader-bar"><i></i></div><small>LOADING MOTION</small></div>
   <div class="cursor" id="cursor"></div><div class="cursor-ring" id="cursorRing"></div>
-  <div class="noise"></div>
-  <audio id="bgMusic" src="assets/music.mp3" loop preload="auto"></audio>
-  <button id="musicToggle" class="music-toggle magnetic" type="button" aria-label="Turn background music on" aria-pressed="false">
-    <span class="music-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-    <span class="music-label">MUSIC OFF</span>
-  </button><div class="blob blob-a"></div><div class="blob blob-b"></div>
+  <div class="noise"></div><div class="blob blob-a"></div><div class="blob blob-b"></div>
 
   <header class="nav-wrap">
     <nav class="nav container">
@@ -47,15 +42,12 @@
       </div>
     </section>
 
-    <div class="quick-stats container reveal"><div><b id="statProjects">00</b><span>PROJECTS</span></div><div><b>04</b><span>SERVICES</span></div><div><b>24/7</b><span>CREATIVE MODE</span></div><div><b>100%</b><span>ENERGY</span></div></div>
-
     <div class="ticker"><div class="ticker-track">EDIT · MOTION · COLOR · GAMING · SHORTS · STORY · YOUTUBE · EDIT · MOTION · COLOR · GAMING · SHORTS · STORY · YOUTUBE ·</div></div>
 
     <section id="work" class="section container">
       <div class="section-head reveal"><div><p class="eyebrow"><span></span> SELECTED WORK</p><h2>Made to <em>move.</em></h2></div><div class="count" id="projectCount">00 PROJECTS</div></div>
-      <div class="work-tools reveal"><div class="filter-tabs" id="filterTabs"><button class="active" data-filter="all">ALL</button><button data-filter="shorts">SHORTS</button><button data-filter="gaming">GAMING</button><button data-filter="youtube">YOUTUBE</button><button data-filter="motion">MOTION</button></div><label class="project-search"><span>⌕</span><input id="projectSearch" type="search" placeholder="Search projects..." autocomplete="off"></label></div>
       <div class="work-grid" id="workGrid"></div>
-      <div class="empty-work" id="emptyWork"><div>DROP YOUR MP4s<br>INTO <b>/assets</b></div><span>On PHP hosting, they'll appear here automatically.</span></div>
+      <div class="empty-work" id="emptyWork"><div>DROP YOUR MP4s<br>INTO <b>/assets</b></div><span>Add your MP4 to /assets, then add one line to PROJECTS in script.js.</span></div>
     </section>
 
     <section id="services" class="section services container">
@@ -78,19 +70,15 @@
     <section id="contact" class="contact container reveal">
       <p class="eyebrow"><span></span> HAVE A PROJECT?</p><h2>Let’s make something<br><em>people remember.</em></h2>
       <div class="contact-grid">
-        <div class="contact-info"><a class="contact-link" href="mailto:duskfacts@gmail.com">duskfacts@gmail.com <span>↗</span></a><button class="copy-chip" data-copy="duskfacts@gmail.com">COPY EMAIL</button><div class="discord">DISCORD <b>@aryanogra</b></div><button class="copy-chip" data-copy="@aryanogra">COPY DISCORD</button><p>Tell me what you're making, what footage you have, and the kind of energy you want. I’ll get back to you by email.</p></div>
-        <form class="contact-form" id="contactForm" action="mailto:duskfacts@gmail.com" method="post" enctype="text/plain"><div class="form-row"><input name="Name" placeholder="Your name" required><input name="Project" placeholder="What do you need edited?" required></div><div class="form-row"><select name="Service" required><option value="" disabled selected>Choose a service</option><option>Shorts / Reels</option><option>Gaming Edit</option><option>YouTube Video</option><option>Motion Graphics</option></select><select name="Budget"><option value="" selected>Budget range (optional)</option><option>Under ₹1,000</option><option>₹1,000 – ₹3,000</option><option>₹3,000 – ₹7,000</option><option>₹7,000+</option></select></div><textarea name="Message" rows="5" placeholder="Tell me about the project..." required></textarea><div class="form-foot"><small>Press Ctrl / ⌘ + Enter to send</small><button class="btn btn-primary" type="submit">Request an edit ↗</button></div></form>
+        <div class="contact-info"><a class="contact-link" href="mailto:duskfacts@gmail.com">duskfacts@gmail.com <span>↗</span></a><div class="discord">DISCORD <b>@aryanogra</b></div><p>Tell me what you're making, what footage you have, and the kind of energy you want. I’ll get back to you by email.</p></div>
+        <form class="contact-form" action="mailto:duskfacts@gmail.com" method="post" enctype="text/plain"><input name="Name" placeholder="Your name" required><input name="Project" placeholder="What do you need edited?" required><textarea name="Message" rows="5" placeholder="Tell me about the project..." required></textarea><button class="btn btn-primary" type="submit">Request an edit ↗</button></form>
       </div>
     </section>
   </main>
 
   <footer class="footer container"><span>© 2026 ARYAN OGRA</span><span>VIDEO EDITOR · CAPCUT · MOTION</span><a href="#home">BACK TO TOP ↑</a></footer>
 
-  <button class="back-top magnetic" id="backTop" aria-label="Back to top">↑</button>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <div class="palette" id="palette" aria-hidden="true"><div class="palette-box"><div class="palette-head"><span>COMMAND CENTER</span><kbd>ESC</kbd></div><input id="paletteInput" placeholder="Jump to a section or action..." autocomplete="off"><div class="palette-list" id="paletteList"></div><small>↑ ↓ navigate · Enter select · Esc close</small></div></div>
-
-  <div class="viewer" id="viewer" aria-hidden="true"><button class="viewer-close" id="viewerClose" aria-label="Close viewer">×</button><div class="viewer-content"><video id="viewerVideo" controls playsinline></video><div class="viewer-caption"><div><b id="viewerTitle"></b><span id="viewerCategory"></span></div><div class="viewer-actions"><button id="viewerPrev" type="button">← PREV</button><button id="viewerNext" type="button">NEXT →</button><button id="viewerFull" type="button">FULLSCREEN</button></div></div></div></div>
+  <div class="viewer" id="viewer" aria-hidden="true"><button class="viewer-close" id="viewerClose" aria-label="Close viewer">×</button><div class="viewer-content"><video id="viewerVideo" controls playsinline></video><div class="viewer-caption"><b id="viewerTitle"></b><span id="viewerCategory"></span></div></div></div>
   <script src="script.js"></script>
 </body>
 </html>

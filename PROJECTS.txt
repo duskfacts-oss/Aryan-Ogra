@@ -1,0 +1,7 @@
+GITHUB PROJECT GUIDE
+
+Put your MP4 files in the assets folder, then edit the PROJECTS array in script.js.
+Example:
+{ file: "my-edit.mp4", title: "My Gaming Edit", category: "Gaming" }
+
+GitHub Pages cannot run PHP, so this version uses JavaScript instead.
