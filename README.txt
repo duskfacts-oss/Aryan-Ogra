@@ -1,11 +1,34 @@
-ARYAN OGRA — GITHUB PAGES PORTFOLIO
+ARYAN OGRA — PORTFOLIO
 
-1. Upload everything in this folder to your GitHub repository.
-2. Keep the assets folder.
-3. Put MP4 files inside assets/.
-4. Open script.js and edit PROJECTS. Example:
-   {src:'assets/edit1.mp4', title:'My Gaming Edit', category:'Gaming Edit', number:'01', label:'MY\nEDIT'},
-5. Commit changes.
-6. Enable GitHub Pages in Settings → Pages.
+Warm orange / soft coral edition
 
-IMPORTANT: GitHub Pages is static hosting, so PHP does not run. This version is fully HTML/CSS/JS and keeps the dark glass + animated fog design. GitHub has file-size limits; for very large videos, use Git LFS or external video hosting.
+Name: Aryan Ogra
+Discord: @aryanogra
+Email: duskfacts@gmail.com
+Software: CapCut
+Tagline: I turn raw footage into edits that demand attention.
+
+FEATURES
+- Cinematic preloader
+- Glowing custom cursor on desktop
+- Animated orange/coral gradient background
+- Smooth scrolling + section reveal + parallax-style motion
+- Hover-to-preview project cards
+- Medium-size project viewer with blurred background
+- Full video controls
+- Animated filters
+- Automatic project numbering
+- GitHub Actions project generator
+- Responsive premium mobile layout
+- Services, About, animated skill cards, request form
+- Animated success screen for the request form
+- Creative footer and editing-themed easter egg
+
+AUTO PROJECT SYSTEM
+Upload any .mp4 into assets/ on the GitHub repository.
+GitHub Actions automatically regenerates projects.json.
+The site then loads the new project without editing HTML or JavaScript.
+
+MANUAL ORDER
+Edit project-order.json if you want a custom order. Put filenames in the exact order you want.
+If a file is not listed, it is appended automatically.
