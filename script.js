@@ -24,6 +24,13 @@ function titleFromFile(name) {
 
 function projectMeta(name) {
   const lower = name.toLowerCase();
+  let type = 'shorts';
+  let cat = 'SHORT-FORM / EDITING';
+  if (lower.includes('gaming') || lower.includes('game') || lower.includes('1006')) {
+    type = 'gaming'; cat = 'GAMING / PACE / EDITING';
+  } else if (lower.includes('motion') || lower.includes('portfolio') || lower.includes('edit')) {
+    type = 'motion'; cat = 'MOTION / EDITING / RHYTHM';
+  }
   const known = {
     'edit.mp4': ['shorts motion', 'PRODUCT / MOTION / SHORT-FORM'],
     'gaming.mp4': ['gaming', 'GAMING / PACE / CAPTIONS'],
@@ -32,25 +39,22 @@ function projectMeta(name) {
     'potopolio.mp4': ['shorts motion', 'SHORT-FORM / RHYTHM / VISUALS'],
     '1006-2.mp4': ['gaming', 'GAMING / PACE / EDITING']
   };
-  if (known[lower]) return known[lower];
-  if (lower.includes('gaming') || lower.includes('game')) return ['gaming', 'GAMING / PACE / EDITING'];
-  if (lower.includes('motion') || lower.includes('portfolio') || lower.includes('edit')) return ['motion', 'MOTION / EDITING / RHYTHM'];
-  return ['shorts', 'SHORT-FORM / EDITING'];
+  return known[lower] || [type, cat];
 }
 
-function createCard(project, index) {
-  const fileName = project.file || project.name;
+function createCard(fileName, index, posterNames = new Set()) {
   const path = `assets/${encodeURIComponent(fileName)}`;
-  const title = project.title || titleFromFile(fileName);
-  const [type, cat] = project.type ? [project.type, project.category || 'EDITING'] : projectMeta(fileName);
-  const poster = project.poster ? ` poster="assets/${encodeURIComponent(project.poster)}"` : '';
+  const title = titleFromFile(fileName);
+  const [type, cat] = projectMeta(fileName);
   const article = document.createElement('article');
-  article.className = `project reveal ${index % 3 === 1 ? 'project-wide' : ''}`;
+  article.className = 'project reveal';
   article.dataset.type = type;
   article.dataset.video = path;
   article.dataset.title = title;
   article.dataset.cat = cat;
   article.dataset.cursor = 'OPEN';
+  const posterName = fileName.replace(/\.mp4$/i, '.jpg');
+  const poster = posterNames.has(posterName.toLowerCase()) ? ` poster="assets/${encodeURIComponent(posterName)}"` : '';
   article.innerHTML = `
     <div class="project-media">
       <video muted loop playsinline preload="metadata"${poster} src="${path}"></video>
@@ -70,9 +74,7 @@ function attachProjectBehavior() {
     const v = card.querySelector('video');
     card.addEventListener('mouseenter', () => v?.play().catch(() => {}));
     card.addEventListener('mouseleave', () => { if (v) { v.pause(); v.currentTime = 0; } });
-    card.addEventListener('click', e => {
-      if (e.target.closest('.open-project') || e.currentTarget.classList.contains('project')) openProject(card);
-    });
+    card.addEventListener('click', () => openProject(card));
     observer.observe(card);
   });
 }
@@ -100,26 +102,43 @@ function setupFilters() {
   }));
 }
 
+async function listGitHubAssets() {
+  // Git Trees sees the whole repo and avoids the 1,000-file directory limit of
+  // the Contents endpoint. It is also read-only, so no token is needed.
+  const url = 'https://api.github.com/repos/duskfacts-oss/Aryan-Ogra/git/trees/main?recursive=1';
+  const response = await fetch(`${url}&t=${Date.now()}`, {
+    headers: { Accept: 'application/vnd.github+json' },
+    cache: 'no-store'
+  });
+  if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
+  const data = await response.json();
+  if (!Array.isArray(data.tree)) throw new Error('Invalid GitHub tree');
+  const assets = data.tree.filter(item => item.type === 'blob' && /^assets\/[^/]+\.mp4$/i.test(item.path));
+  const posters = new Set(data.tree
+    .filter(item => item.type === 'blob' && /^assets\/[^/]+\.jpg$/i.test(item.path))
+    .map(item => item.path.split('/').pop().toLowerCase()));
+  return { files: assets.map(item => item.path.split('/').pop()), posters };
+}
+
 async function loadProjects() {
   const grid = $('#projectGrid');
   if (!grid) return;
   try {
-    // projects.json is generated automatically by GitHub Actions whenever an MP4 is added to assets/.
-    const response = await fetch(`projects.json?v=${Date.now()}`, { cache: 'no-store' });
-    if (!response.ok) throw new Error('projects.json unavailable');
-    const projects = await response.json();
+    const { files, posters } = await listGitHubAssets();
+    files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
     grid.innerHTML = '';
-    projects.forEach((project, i) => grid.appendChild(createCard(project, i)));
-    if (!projects.length) grid.innerHTML = '<div class="projects-loading">ADD MP4 FILES TO /assets TO SHOW THEM HERE.</div>';
+    files.forEach((name, i) => grid.appendChild(createCard(name, i, posters)));
+    if (!files.length) grid.innerHTML = '<div class="projects-loading">ADD MP4 FILES TO /assets TO SHOW THEM HERE.</div>';
     updateCounts();
     attachProjectBehavior();
     setupFilters();
   } catch (err) {
-    grid.innerHTML = '<div class="projects-loading">PROJECTS ARE UPDATING. WAIT A FEW SECONDS AND REFRESH.</div>';
-    console.error(err);
+    console.error('Project loader:', err);
+    grid.innerHTML = '<div class="projects-loading">PROJECTS COULD NOT LOAD. MAKE SURE THIS SITE IS THE GITHUB PAGES SITE FOR duskfacts-oss/Aryan-Ogra.</div>';
   }
 }
 
+// Cursor + magnetic interactions on desktop.
 const dot = $('.cursor-dot'), ring = $('.cursor-ring'), label = $('.cursor-label');
 let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
 window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; if (dot) { dot.style.left = mx + 'px'; dot.style.top = my + 'px'; } });
@@ -145,6 +164,7 @@ if (tilt && matchMedia('(pointer:fine)').matches) {
   tilt.addEventListener('mouseleave', () => tilt.style.transform = '');
 }
 
+// Modal project viewer.
 const modal = $('#modal'), mv = $('#modalVideo'), mt = $('#modalTitle'), mc = $('#modalCat');
 function openProject(card) { mv.src = card.dataset.video; mt.textContent = card.dataset.title; mc.textContent = card.dataset.cat; modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; mv.play().catch(() => {}); }
 function closeProject() { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); mv.pause(); mv.removeAttribute('src'); mv.load(); document.body.style.overflow = ''; }

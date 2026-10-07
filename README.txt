@@ -1,9 +1,29 @@
-ARYAN OGRA PORTFOLIO - AUTO PROJECTS
+ARYAN OGRA PORTFOLIO — RESTORED VERSION
 
-1. Upload/replace index.html, style.css, script.js and projects.json in the GitHub repo.
-2. Upload .github/workflows/generate-projects.yml too.
-3. Keep your existing assets/ videos.
-4. From now on, upload any .mp4 directly into assets/.
-5. GitHub Actions automatically rebuilds projects.json and the new video appears on the Projects section.
+This is the latest working design with the small/clean project grid.
 
-Note: The first automatic update can take about 30-90 seconds after uploading a video.
+IMPORTANT:
+1. Upload/replace the website files in your GitHub repository with these files.
+2. Keep the entire assets folder.
+3. GitHub Pages should point to the repository's main branch and root folder.
+4. After GitHub Pages finishes deploying, open:
+   https://duskfacts-oss.github.io/Aryan-Ogra/
+
+AUTOMATIC PROJECTS:
+- Put any new .mp4 directly into assets/.
+- You do NOT edit script.js.
+- Refresh the website after GitHub finishes uploading/deploying.
+- The site reads the assets folder from GitHub automatically.
+
+Current included projects:
+EDIT.mp4
+ gaming.mp4
+patipolio.mp4
+portfolio.mp4
+potopolio.mp4
+1006-2.mp4 (Gaming Edit)
+
+If you upload a file such as gaming-valorant.mp4, it will automatically appear.
+The title is generated from the filename. Names containing gaming/game/1006 are treated as Gaming.
+
+Do not rename script.js or move it out of the repository root.
