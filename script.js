@@ -34,7 +34,7 @@ if (bgMusic && musicToggle) {
     musicToggle.classList.toggle('playing', on);
     musicToggle.setAttribute('aria-pressed', String(on));
     musicToggle.setAttribute('aria-label', on ? 'Turn background music off' : 'Turn background music on');
-    if (label) label.textContent = on ? 'MUSIC ON' : 'MUSIC OFF';
+    if (label) label.textContent = on ? 'MUSIC ON' : 'MUSIC On';
   };
   const fadeTo = (target, duration = 450) => {
     const start = bgMusic.volume;
@@ -62,7 +62,7 @@ if (bgMusic && musicToggle) {
       setMusicUI(false);
     }
   });
-  bgMusic.addEventListener('ended', () => setMusicUI(false));
+  bgMusic.addEventListener('ended', () => setMusicUI(true));
 }
 
 /* MAX FEATURE PACK */
