@@ -10,7 +10,7 @@ const catMap={
   'EDIT.mp4':['shorts','motion','PRODUCT / MOTION / SHORT-FORM'],
   'gaming.mp4':['gaming','GAMING / PACE / CAPTIONS'],
   'patipolio.mp4':['shorts','SHORT-FORM / STORYTELLING'],
-  'portfolio.mp4':['motion','MOTION / cooTRANSITIONS / DESIGN'],
+  'portfolio.mp4':['motion','MOTION / TRANSITIONS / DESIGN'],
   'potopolio.mp4':['shorts','motion','SHORT-FORM / RHYTHM / VISUALS'],
   '1006-2.mp4':['gaming','GAMING / ACTION / EDITING']
 };
@@ -32,33 +32,10 @@ function renderProjects(){
  grid.innerHTML='';
  projects.forEach((p)=>{
    const card=document.createElement('article'); card.className='project reveal'; card.dataset.type=p.types.join(' '); card.dataset.video=`assets/${p.file}`; card.dataset.title=p.title; card.dataset.cat=p.cat; card.dataset.cursor='OPEN';
-   card.innerHTML = `
-  <div class="project-media">
-    <video
-      preload="auto"
-      muted
-      loop
-      playsinline
-      src="./assets/${p.file}">
-    </video>
-
-    <div class="project-overlay"></div>
-    <span class="project-index">${p.index}</span>
-    <button class="open-project" aria-label="Open ${p.title}">↗</button>
-    <span class="play-hint">HOVER TO PLAY</span>
-  </div>
-
-  <div class="project-info">
-    <div>
-      <span>${p.cat}</span>
-      <h3>${p.title}</h3>
-    </div>
-    <b>↗</b>
-  </div>
-`;<div class="project-overlay"></div><span class="project-index">${p.index}</span><button class="open-project" aria-label="Open ${p.title}">↗</button><span class="play-hint">HOVER TO PLAY</span></div><div class="project-info"><div><span>${p.cat}</span><h3>${p.title}</h3></div><b>↗</b></div>`;
+   card.innerHTML=`<div class="project-media"><video preload="metadata" muted loop playsinline loading="lazy" poster="${posterFor(p.file)}" src="assets/${p.file}"></video><div class="project-overlay"></div><span class="project-index">${p.index}</span><button class="open-project" aria-label="Open ${p.title}">↗</button><span class="play-hint">HOVER TO PLAY</span></div><div class="project-info"><div><span>${p.cat}</span><h3>${p.title}</h3></div><b>↗</b></div>`;
    grid.appendChild(card);
    const v=card.querySelector('video');
-   card.addEventListener('mouseenter',()=>{   v.load();   v.play().catch(err=>console.log('Video play error:',err)); });
+   card.addEventListener('mouseenter',()=>v.play().catch(()=>{}));
    card.addEventListener('mouseleave',()=>{v.pause();v.currentTime=0});
    card.addEventListener('click',e=>{if(e.target.closest('.open-project')||e.currentTarget===card)openProject(card)});
    observer?.observe(card);
