@@ -10,7 +10,7 @@ const catMap={
   'EDIT.mp4':['shorts','motion','PRODUCT / MOTION / SHORT-FORM'],
   'gaming.mp4':['gaming','GAMING / PACE / CAPTIONS'],
   'patipolio.mp4':['shorts','SHORT-FORM / STORYTELLING'],
-  'portfolio.mp4':['motion','MOTION / TRANSITIONS / DESIGN'],
+  'portfolio.mp4':['motion','MOTION / cooTRANSITIONS / DESIGN'],
   'potopolio.mp4':['shorts','motion','SHORT-FORM / RHYTHM / VISUALS'],
   '1006-2.mp4':['gaming','GAMING / ACTION / EDITING']
 };
