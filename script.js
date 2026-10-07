@@ -1,179 +1,115 @@
-const $ = (s) => document.querySelector(s);
-const $$ = (s) => document.querySelectorAll(s);
-
-const pre = $('.preloader');
-window.addEventListener('load', () => setTimeout(() => pre?.classList.add('done'), 700));
-
-const observer = new IntersectionObserver((entries) => entries.forEach(e => {
-  if (e.isIntersecting) e.target.classList.add('visible');
-}), { threshold: .12 });
-
-function titleFromFile(name) {
-  const base = name.replace(/\.mp4$/i, '').replace(/[-_]+/g, ' ').trim();
-  const known = {
-    'EDIT': 'Coca-Cola Concept',
-    'gaming': 'Game Edit',
-    'patipolio': 'Personal Growth',
-    'portfolio': 'Portfolio Motion',
-    'potopolio': 'Creative Short',
-    '1006 2': 'Gaming Edit'
-  };
-  if (known[base]) return known[base];
-  return base.replace(/\b\w/g, c => c.toUpperCase()) || 'Untitled Edit';
-}
-
-function projectMeta(name) {
-  const lower = name.toLowerCase();
-  let type = 'shorts';
-  let cat = 'SHORT-FORM / EDITING';
-  if (lower.includes('gaming') || lower.includes('game') || lower.includes('1006')) {
-    type = 'gaming'; cat = 'GAMING / PACE / EDITING';
-  } else if (lower.includes('motion') || lower.includes('portfolio') || lower.includes('edit')) {
-    type = 'motion'; cat = 'MOTION / EDITING / RHYTHM';
-  }
-  const known = {
-    'edit.mp4': ['shorts motion', 'PRODUCT / MOTION / SHORT-FORM'],
-    'gaming.mp4': ['gaming', 'GAMING / PACE / CAPTIONS'],
-    'patipolio.mp4': ['shorts', 'SHORT-FORM / STORYTELLING'],
-    'portfolio.mp4': ['motion', 'MOTION / TRANSITIONS / DESIGN'],
-    'potopolio.mp4': ['shorts motion', 'SHORT-FORM / RHYTHM / VISUALS'],
-    '1006-2.mp4': ['gaming', 'GAMING / PACE / EDITING']
-  };
-  return known[lower] || [type, cat];
-}
-
-function createCard(fileName, index, posterNames = new Set()) {
-  const path = `assets/${encodeURIComponent(fileName)}`;
-  const title = titleFromFile(fileName);
-  const [type, cat] = projectMeta(fileName);
-  const article = document.createElement('article');
-  article.className = 'project reveal';
-  article.dataset.type = type;
-  article.dataset.video = path;
-  article.dataset.title = title;
-  article.dataset.cat = cat;
-  article.dataset.cursor = 'OPEN';
-  const posterName = fileName.replace(/\.mp4$/i, '.jpg');
-  const poster = posterNames.has(posterName.toLowerCase()) ? ` poster="assets/${encodeURIComponent(posterName)}"` : '';
-  article.innerHTML = `
-    <div class="project-media">
-      <video muted loop playsinline preload="metadata"${poster} src="${path}"></video>
-      <div class="project-overlay"></div>
-      <span class="project-index">${String(index + 1).padStart(2, '0')}</span>
-      <button class="open-project" type="button" aria-label="Open ${title}">↗</button>
-      <span class="play-hint">HOVER TO PLAY</span>
-    </div>
-    <div class="project-info"><div><span>${cat}</span><h3>${title}</h3></div><b>↗</b></div>`;
-  return article;
-}
-
-function attachProjectBehavior() {
-  $$('.project').forEach(card => {
-    if (card.dataset.bound) return;
-    card.dataset.bound = '1';
-    const v = card.querySelector('video');
-    card.addEventListener('mouseenter', () => v?.play().catch(() => {}));
-    card.addEventListener('mouseleave', () => { if (v) { v.pause(); v.currentTime = 0; } });
-    card.addEventListener('click', () => openProject(card));
-    observer.observe(card);
-  });
-}
-
-function updateCounts() {
-  const cards = [...$$('.project')];
-  const counts = {
-    all: cards.length,
-    shorts: cards.filter(c => c.dataset.type.includes('shorts')).length,
-    gaming: cards.filter(c => c.dataset.type.includes('gaming')).length,
-    motion: cards.filter(c => c.dataset.type.includes('motion')).length
-  };
-  $$('.filters button').forEach(btn => {
-    const sup = btn.querySelector('sup');
-    if (sup) sup.textContent = counts[btn.dataset.filter] ?? 0;
-  });
-}
-
-function setupFilters() {
-  $$('.filters button').forEach(btn => btn.addEventListener('click', () => {
-    $$('.filters button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const f = btn.dataset.filter;
-    $$('.project').forEach(c => c.style.display = f === 'all' || c.dataset.type.includes(f) ? '' : 'none');
-  }));
-}
-
-async function listGitHubAssets() {
-  // Git Trees sees the whole repo and avoids the 1,000-file directory limit of
-  // the Contents endpoint. It is also read-only, so no token is needed.
-  const url = 'https://api.github.com/repos/duskfacts-oss/Aryan-Ogra/git/trees/main?recursive=1';
-  const response = await fetch(`${url}&t=${Date.now()}`, {
-    headers: { Accept: 'application/vnd.github+json' },
-    cache: 'no-store'
-  });
-  if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
-  const data = await response.json();
-  if (!Array.isArray(data.tree)) throw new Error('Invalid GitHub tree');
-  const assets = data.tree.filter(item => item.type === 'blob' && /^assets\/[^/]+\.mp4$/i.test(item.path));
-  const posters = new Set(data.tree
-    .filter(item => item.type === 'blob' && /^assets\/[^/]+\.jpg$/i.test(item.path))
-    .map(item => item.path.split('/').pop().toLowerCase()));
-  return { files: assets.map(item => item.path.split('/').pop()), posters };
-}
-
-async function loadProjects() {
-  const grid = $('#projectGrid');
-  if (!grid) return;
-  try {
-    const { files, posters } = await listGitHubAssets();
-    files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
-    grid.innerHTML = '';
-    files.forEach((name, i) => grid.appendChild(createCard(name, i, posters)));
-    if (!files.length) grid.innerHTML = '<div class="projects-loading">ADD MP4 FILES TO /assets TO SHOW THEM HERE.</div>';
-    updateCounts();
-    attachProjectBehavior();
-    setupFilters();
-  } catch (err) {
-    console.error('Project loader:', err);
-    grid.innerHTML = '<div class="projects-loading">PROJECTS COULD NOT LOAD. MAKE SURE THIS SITE IS THE GITHUB PAGES SITE FOR duskfacts-oss/Aryan-Ogra.</div>';
-  }
-}
-
-// Cursor + magnetic interactions on desktop.
-const dot = $('.cursor-dot'), ring = $('.cursor-ring'), label = $('.cursor-label');
-let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
-window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; if (dot) { dot.style.left = mx + 'px'; dot.style.top = my + 'px'; } });
-function cursorLoop() { rx += (mx - rx) * .16; ry += (my - ry) * .16; if (ring) { ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; label.style.left = rx + 'px'; label.style.top = ry + 'px'; } requestAnimationFrame(cursorLoop); }
-cursorLoop();
-
-function bindCursor() {
-  $$('[data-cursor],a,button,.magnetic').forEach(el => {
-    el.addEventListener('mouseenter', () => { ring?.classList.add('big'); if (label) { label.textContent = el.dataset.cursor || 'GO'; label.style.opacity = el.dataset.cursor ? '1' : '0'; } });
-    el.addEventListener('mouseleave', () => { ring?.classList.remove('big'); if (label) label.style.opacity = '0'; });
-  });
-}
-bindCursor();
-
-if (matchMedia('(pointer:fine)').matches) {
-  $$('.magnetic').forEach(el => el.addEventListener('mousemove', e => { const r = el.getBoundingClientRect(); el.style.transform = `translate(${(e.clientX-r.left-r.width/2)*.12}px,${(e.clientY-r.top-r.height/2)*.12}px)`; }));
-  $$('.magnetic').forEach(el => el.addEventListener('mouseleave', () => el.style.transform = ''));
-}
-
-const tilt = $('.tilt');
-if (tilt && matchMedia('(pointer:fine)').matches) {
-  tilt.addEventListener('mousemove', e => { const r = tilt.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5; tilt.style.transform = `perspective(900px) rotateX(${-y*5}deg) rotateY(${x*5}deg) rotate(0deg) scale(1.01)`; });
-  tilt.addEventListener('mouseleave', () => tilt.style.transform = '');
-}
-
-// Modal project viewer.
-const modal = $('#modal'), mv = $('#modalVideo'), mt = $('#modalTitle'), mc = $('#modalCat');
-function openProject(card) { mv.src = card.dataset.video; mt.textContent = card.dataset.title; mc.textContent = card.dataset.cat; modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; mv.play().catch(() => {}); }
-function closeProject() { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); mv.pause(); mv.removeAttribute('src'); mv.load(); document.body.style.overflow = ''; }
-$('.hero-play')?.addEventListener('click', () => openProject({dataset:{video:'assets/EDIT.mp4', title:'Coca-Cola Concept', cat:'PRODUCT / MOTION / SHORT-FORM'}}));
-$('.modal-close')?.addEventListener('click', closeProject);
-modal?.addEventListener('click', e => { if (e.target === modal) closeProject(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProject(); });
-
-$('#requestForm')?.addEventListener('submit', e => { e.preventDefault(); const d = new FormData(e.currentTarget); const subject = encodeURIComponent('Editing request from ' + d.get('name')); const body = encodeURIComponent(`Name: ${d.get('name')}\nEmail: ${d.get('email')}\n\nProject brief:\n${d.get('message')}`); window.location.href = `mailto:duskfacts@gmail.com?subject=${subject}&body=${body}`; });
-window.addEventListener('scroll', () => document.documentElement.style.setProperty('--scrollY', window.scrollY));
-
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+window.addEventListener('load',()=>setTimeout(()=>$('#loader')?.classList.add('done'),650));
+const menu=$('#menuBtn'), nav=$('#navLinks'); menu?.addEventListener('click',()=>nav.classList.toggle('open')); $$('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.1}); $$('.reveal').forEach(x=>obs.observe(x));
+const cursor=$('#cursor'),ring=$('#cursorRing'); if(cursor&&ring && matchMedia('(pointer:fine)').matches){addEventListener('mousemove',e=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px'}); $$('.magnetic,.project,.reel-btn').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('big'));el.addEventListener('mouseleave',()=>ring.classList.remove('big'))})}
+$$('.tilt').forEach(el=>el.addEventListener('mousemove',e=>{if(!matchMedia('(pointer:fine)').matches)return;const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`translate(-50%,-50%) rotateY(${x*7}deg) rotateX(${-y*7}deg) rotate(-4deg)`;el.style.transition='none'})); $$('.tilt').forEach(el=>el.addEventListener('mouseleave',()=>{el.style.transform='translate(-50%,-50%) rotate(-5deg)';el.style.transition='.5s ease'}));
+const fallbackProjects=[{title:'Your Best Project',category:'Best Project · Motion Edit',number:'01',label:'BEST\nPROJECT'},{title:'Short Form Energy',category:'Shorts / Reels',number:'02',label:'SHORT\nFORM'},{title:'Gaming Motion',category:'Gaming Edit',number:'03',label:'GAME\nON'},{title:'Experimental Motion',category:'Motion Graphics',number:'04',label:'MOVE\nDIFFERENT'}];
+function renderProjects(items){const grid=$('#workGrid');grid.innerHTML='';items.forEach((p,i)=>{const a=document.createElement('article');a.className='project reveal';a.innerHTML=`<div class="project-visual"><div class="project-fallback"><span class="project-number">${p.number||String(i+1).padStart(2,'0')}</span><span class="project-play">▶</span><div class="project-label">${(p.label||p.title).replaceAll('\n','<br>')}</div></div>${p.src?`<video class="project-video" src="${p.src}" muted loop playsinline preload="metadata"></video>`:''}<div class="project-overlay"></div></div><div class="project-meta"><div><h3>${p.title}</h3><p>${p.category}</p></div><span>↗</span></div>`;grid.appendChild(a);a.addEventListener('click',()=>openViewer(p));a.addEventListener('mouseenter',()=>a.querySelector('video')?.play().catch(()=>{}));a.addEventListener('mouseleave',()=>{const v=a.querySelector('video');if(v){v.pause();v.currentTime=0}});obs.observe(a)});$('#projectCount').textContent=String(items.length).padStart(2,'0')+' PROJECTS';$('#emptyWork').style.display=items.some(x=>x.src)?'none':'block'}
+async function loadProjects(){try{const r=await fetch('projects.php',{cache:'no-store'});if(!r.ok)throw 0;const data=await r.json();renderProjects(data.length?data:fallbackProjects)}catch{renderProjects(fallbackProjects)}}
+function openViewer(p){if(!p.src)return;const v=$('#viewerVideo');v.src=p.src;$('#viewerTitle').textContent=p.title;$('#viewerCategory').textContent=p.category;$('#viewer').classList.add('open');$('#viewer').setAttribute('aria-hidden','false');v.play().catch(()=>{})}function closeViewer(){const v=$('#viewerVideo');v.pause();v.removeAttribute('src');v.load();$('#viewer').classList.remove('open');$('#viewer').setAttribute('aria-hidden','true')}$('#viewerClose')?.addEventListener('click',closeViewer);$('#viewer')?.addEventListener('click',e=>{if(e.target.id==='viewer')closeViewer()});addEventListener('keydown',e=>{if(e.key==='Escape')closeViewer()});
+$('#reelBtn')?.addEventListener('click',()=>{const first=document.querySelector('.project-video');if(first){openViewer({src:first.currentSrc||first.src,title:'Aryan Ogra — Showreel',category:'Selected Work'})}else document.querySelector('#work')?.scrollIntoView({behavior:'smooth'})});
 loadProjects();
+
+// Extra motion: magnetic controls + pointer glow + scroll progress
+const root=document.documentElement;
+const progress=document.createElement('div');progress.className='scroll-progress';document.body.appendChild(progress);
+addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;progress.style.transform=`scaleX(${h?scrollY/h:0})`},{passive:true});
+if(matchMedia('(pointer:fine)').matches){
+  $$('.magnetic').forEach(el=>{el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.10}px,${(e.clientY-r.top-r.height/2)*.10}px)`});el.addEventListener('mouseleave',()=>el.style.transform='')});
+  const glow=document.createElement('div');glow.className='pointer-glow';document.body.appendChild(glow);
+  addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'},{passive:true});
+}
+
+
+// Background music control: starts only after a user gesture (browser autoplay rules).
+const bgMusic = $('#bgMusic');
+const musicToggle = $('#musicToggle');
+let musicOn = false;
+if (bgMusic && musicToggle) {
+  bgMusic.volume = 0.18;
+  const label = musicToggle.querySelector('.music-label');
+  const setMusicUI = on => {
+    musicOn = on;
+    musicToggle.classList.toggle('playing', on);
+    musicToggle.setAttribute('aria-pressed', String(on));
+    musicToggle.setAttribute('aria-label', on ? 'Turn background music off' : 'Turn background music on');
+    if (label) label.textContent = on ? 'MUSIC ON' : 'MUSIC OFF';
+  };
+  const fadeTo = (target, duration = 450) => {
+    const start = bgMusic.volume;
+    const begin = performance.now();
+    const tick = now => {
+      const t = Math.min(1, (now - begin) / duration);
+      bgMusic.volume = start + (target - start) * t;
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  musicToggle.addEventListener('click', async () => {
+    if (!musicOn) {
+      try {
+        bgMusic.volume = 0;
+        await bgMusic.play();
+        fadeTo(0.18, 650);
+        setMusicUI(true);
+      } catch {
+        setMusicUI(false);
+      }
+    } else {
+      fadeTo(0, 350);
+      setTimeout(() => bgMusic.pause(), 360);
+      setMusicUI(false);
+    }
+  });
+  bgMusic.addEventListener('ended', () => setMusicUI(false));
+}
+
+/* MAX FEATURE PACK */
+const projectState={items:[],filter:'all',query:'',current:0};
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function applyProjectFilters(){
+  const grid=$('#workGrid'); if(!grid)return;
+  const cards=[...grid.querySelectorAll('.project')]; let shown=0;
+  cards.forEach((card,i)=>{const p=projectState.items[i]||{};const hay=(p.title+' '+p.category).toLowerCase();const f=projectState.filter==='all'||hay.includes(projectState.filter);const q=!projectState.query||hay.includes(projectState.query);const ok=f&&q;card.classList.toggle('hidden',!ok);if(ok){shown++;card.classList.remove('match-pop');requestAnimationFrame(()=>card.classList.add('match-pop'))}});
+  $('#projectCount').textContent=String(shown).padStart(2,'0')+' PROJECTS';
+}
+function setupProjectTools(){
+  $$('#filterTabs button').forEach(btn=>btn.addEventListener('click',()=>{$$('#filterTabs button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');projectState.filter=btn.dataset.filter||'all';applyProjectFilters()}));
+  $('#projectSearch')?.addEventListener('input',e=>{projectState.query=e.target.value.trim().toLowerCase();applyProjectFilters()});
+}
+setupProjectTools();
+const oldRenderProjects=renderProjects;
+renderProjects=function(items){projectState.items=items;oldRenderProjects(items);if($('#statProjects')) $('#statProjects').textContent=String(items.length).padStart(2,'0');setupProjectTools();applyProjectFilters();};
+
+// Viewer navigation
+function openViewerAt(index){const p=projectState.items[index];if(!p?.src)return;projectState.current=index;openViewer(p);$('#viewerPrev').disabled=projectState.items.length<2;$('#viewerNext').disabled=projectState.items.length<2}
+$('#viewerPrev')?.addEventListener('click',()=>{let i=projectState.current-1;if(i<0)i=projectState.items.length-1;openViewerAt(i)});
+$('#viewerNext')?.addEventListener('click',()=>{let i=projectState.current+1;if(i>=projectState.items.length)i=0;openViewerAt(i)});
+$('#viewerFull')?.addEventListener('click',()=>{$('#viewerVideo')?.requestFullscreen?.()});
+const originalOpenViewer=openViewer;openViewer=function(p){const i=projectState.items.findIndex(x=>x.src===p.src);if(i>=0)projectState.current=i;originalOpenViewer(p)};
+
+// Copy-to-clipboard chips + toast
+const toast=$('#toast');let toastTimer;function showToast(msg){if(!toast)return;toast.textContent=msg;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),1800)}
+$$('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(btn.dataset.copy);showToast('Copied to clipboard')}catch{showToast(btn.dataset.copy)}}));
+
+// Back to top
+const backTop=$('#backTop');addEventListener('scroll',()=>backTop?.classList.toggle('show',scrollY>700),{passive:true});backTop?.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+
+// Keyboard shortcuts / command palette
+const palette=$('#palette'),paletteInput=$('#paletteInput'),paletteList=$('#paletteList');
+const commands=[['Home','Go to top','#home'],['Work','View selected work','#work'],['Services','View services','#services'],['About','Read about Aryan','#about'],['Contact','Request an edit','#contact'],['Music','Toggle background music','music'],['Fullscreen work','Open first video','first-video']];
+function drawCommands(q=''){const list=commands.filter(c=>(c[0]+' '+c[1]).toLowerCase().includes(q.toLowerCase()));paletteList.innerHTML=list.map((c,i)=>`<div class="palette-item ${i===0?'active':''}" data-action="${c[2]}"><b>${esc(c[0])}</b><span>${esc(c[1])}</span></div>`).join('');$$('.palette-item').forEach(x=>x.addEventListener('click',()=>runCommand(x.dataset.action)))}
+function runCommand(a){palette.classList.remove('open');palette.setAttribute('aria-hidden','true');if(a.startsWith('#'))document.querySelector(a)?.scrollIntoView({behavior:'smooth'});else if(a==='music')musicToggle?.click();else if(a==='first-video'){$('#workGrid .project:not(.hidden)')?.click()}}
+function openPalette(){drawCommands();palette.classList.add('open');palette.setAttribute('aria-hidden','false');setTimeout(()=>paletteInput?.focus(),30)}
+palette?.addEventListener('click',e=>{if(e.target===palette){palette.classList.remove('open');palette.setAttribute('aria-hidden','true')}});paletteInput?.addEventListener('input',e=>drawCommands(e.target.value));
+addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPalette()}if(e.key==='Escape'){palette?.classList.remove('open');palette?.setAttribute('aria-hidden','true')}});
+
+// Contact shortcut
+$('#contactForm')?.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter')$('#contactForm').requestSubmit()});
+
+// Active nav link based on section visibility
+const sections=[...document.querySelectorAll('main section[id]')];const navMap=new Map($$('.nav-links a').map(a=>[a.getAttribute('href'),a]));const activeObs=new IntersectionObserver(entries=>entries.forEach(en=>{if(en.isIntersecting){navMap.forEach(a=>a.classList.remove('active'));navMap.get('#'+en.target.id)?.classList.add('active')}}),{rootMargin:'-35% 0px -55%'});sections.forEach(s=>activeObs.observe(s));
+
+// Pause background effects/videos when tab is hidden; restore music state when visible.
+document.addEventListener('visibilitychange',()=>{if(document.hidden){document.querySelectorAll('.project-video').forEach(v=>v.pause())}});

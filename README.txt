@@ -1,29 +1,28 @@
-ARYAN OGRA PORTFOLIO — RESTORED VERSION
+ARYAN OGRA — VIDEO EDITOR PORTFOLIO
 
-This is the latest working design with the small/clean project grid.
+FEATURES
+- Dark cinematic glassmorphism UI with animated aurora/fog
+- Custom cursor, magnetic buttons, tilt cards, scroll reveal and progress bar
+- Background music toggle with fade in/out (add assets/music.mp3)
+- Automatic MP4/WebM/MOV/M4V project loading on PHP hosting
+- Project filtering and live search
+- Hover video previews
+- Fullscreen project viewer with previous/next navigation
+- Command center: Ctrl/Cmd + K
+- Copy email/Discord buttons
+- Animated toast notifications
+- Contact form with service and optional budget fields
+- Ctrl/Cmd + Enter submits the contact form
+- Back-to-top button
+- Active navigation highlighting
+- Responsive phone/tablet/desktop layout
+- Reduced-motion accessibility support
 
-IMPORTANT:
-1. Upload/replace the website files in your GitHub repository with these files.
-2. Keep the entire assets folder.
-3. GitHub Pages should point to the repository's main branch and root folder.
-4. After GitHub Pages finishes deploying, open:
-   https://duskfacts-oss.github.io/Aryan-Ogra/
+AUTO VIDEO SYSTEM
+Put video files into /assets. PHP hosting runs projects.php, scans the folder, and creates project cards automatically.
 
-AUTOMATIC PROJECTS:
-- Put any new .mp4 directly into assets/.
-- You do NOT edit script.js.
-- Refresh the website after GitHub finishes uploading/deploying.
-- The site reads the assets folder from GitHub automatically.
+MUSIC
+Put a legally usable MP3 named music.mp3 into /assets. Visitors click MUSIC OFF to start it; browsers generally block autoplay before interaction.
 
-Current included projects:
-EDIT.mp4
- gaming.mp4
-patipolio.mp4
-portfolio.mp4
-potopolio.mp4
-1006-2.mp4 (Gaming Edit)
-
-If you upload a file such as gaming-valorant.mp4, it will automatically appear.
-The title is generated from the filename. Names containing gaming/game/1006 are treated as Gaming.
-
-Do not rename script.js or move it out of the repository root.
+CONTACT
+The contact form uses mailto:duskfacts@gmail.com. For real server-side submissions, connect a form backend later.
