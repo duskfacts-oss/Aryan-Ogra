@@ -2,83 +2,108 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#ff5f4d">
-  <meta name="description" content="Aryan Ogra — colorful, experimental video editor and motion graphics creator.">
-  <title>Aryan Ogra — Video Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0c">
+  <meta name="description" content="Aryan Ogra — creative video editor portfolio. Shorts, gaming, YouTube and motion graphics.">
+  <title>ARYAN OGRA — VIDEO EDITOR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="loader" id="loader"><div class="loader-mark">AO<span>.</span></div><div class="loader-bar"><i></i></div><small>LOADING MOTION</small></div>
-  <div class="cursor" id="cursor"></div><div class="cursor-ring" id="cursorRing"></div>
-  <div class="noise"></div><div class="blob blob-a"></div><div class="blob blob-b"></div>
+  <div class="preloader"><div class="loader-word">AO</div><div class="loader-line"><span></span></div><p>LOADING PORTFOLIO</p></div>
+  <div class="noise"></div><div class="grid-bg"></div>
+  <div class="cursor-dot"></div><div class="cursor-ring"></div><div class="cursor-label">VIEW</div>
 
-  <header class="nav-wrap">
-    <nav class="nav container">
-      <a class="logo magnetic" href="#home">ARYAN<span>.</span></a>
-      <button class="menu-btn" id="menuBtn" aria-label="Open navigation"><span></span><span></span></button>
-      <div class="nav-links" id="navLinks">
-        <a href="#work">Work</a><a href="#services">Services</a><a href="#about">About</a><a href="#contact">Contact</a>
-      </div>
-      <a class="nav-cta magnetic" href="#contact">Request an edit ↗</a>
-    </nav>
+  <header class="nav">
+    <a class="brand magnetic" href="#top"><span>AO</span><b>ARYAN OGRA</b></a>
+    <nav><a href="#work">WORK</a><a href="#services">SERVICES</a><a href="#about">ABOUT</a></nav>
+    <a class="nav-cta magnetic" href="#contact">START A PROJECT <span>↗</span></a>
   </header>
 
-  <main id="home">
-    <section class="hero container">
-      <div class="hero-copy reveal">
-        <div class="eyebrow"><span></span> VIDEO EDITOR · MOTION GRAPHICS</div>
-        <h1>I turn raw footage<br>into edits that <em>demand attention.</em></h1>
-        <p class="hero-text">I'm <b>Aryan Ogra</b> — a colorful and experimental editor creating punchy shorts, gaming edits, YouTube videos and motion graphics in CapCut.</p>
-        <div class="hero-actions"><a class="btn btn-primary magnetic" href="#work">View my work <span>↗</span></a><a class="btn btn-ghost magnetic" href="#contact">Request an edit</a></div>
-        <div class="hero-meta"><span>BASED IN INDIA</span><span>CAPCUT EDITOR</span><span>AVAILABLE FOR PROJECTS</span></div>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-glow"></div>
+      <div class="hero-copy">
+        <div class="eyebrow reveal"><i></i> VIDEO EDITOR / MOTION DESIGNER</div>
+        <h1 class="hero-title"><span>MAKE IT</span><span class="outline">MOVE.</span><span>MAKE IT</span><span class="lime">MATTER.</span></h1>
+        <p class="hero-sub reveal">I turn raw footage into edits that demand attention.</p>
+        <div class="hero-actions reveal">
+          <a class="button primary magnetic" href="#work">EXPLORE MY WORK <span>↓</span></a>
+          <a class="button ghost magnetic" href="#contact">REQUEST AN EDIT <span>↗</span></a>
+        </div>
       </div>
-      <div class="hero-stage reveal" id="heroStage">
-        <div class="stage-grid"></div><div class="hero-card main-card tilt"><div class="card-top"><span>BEST PROJECT</span><span>001</span></div><div class="screen"><div class="scan"></div><div class="play-orb">▶</div><strong>PLAY<br>THE<br>FRAME</strong></div><div class="card-bottom"><span>EDIT / MOTION / COLOR</span><span>↗</span></div></div>
-        <div class="mini-card mini-one tilt">CUT<br><b>FAST.</b></div><div class="mini-card mini-two tilt">MAKE IT<br><b>MOVE.</b></div><div class="stage-word">CREATE</div>
+      <div class="hero-side reveal">
+        <div class="side-number">01<span>/05</span></div>
+        <div class="side-copy">SELECTED<br>WORK</div>
+      </div>
+      <div class="hero-media reveal">
+        <div class="hero-card tilt" data-cursor="PLAY">
+          <video autoplay muted loop playsinline poster="assets/EDIT.jpg" src="assets/EDIT.mp4"></video>
+          <div class="video-vignette"></div>
+          <div class="hero-card-top"><span>FEATURED EDIT</span><span>2026</span></div>
+          <button class="hero-play" aria-label="Open featured edit">↗</button>
+          <div class="hero-card-bottom"><strong>01</strong><span>PRODUCT / MOTION / SHORT-FORM</span></div>
+        </div>
+        <div class="floating-tag tag-one">CAPCUT</div><div class="floating-tag tag-two">FRAME × FRAME</div>
+      </div>
+      <div class="scroll-cue"><span>SCROLL TO EXPLORE</span><i></i></div>
+    </section>
+
+    <section class="marquee"><div class="marquee-track"><span>SHORTS & REELS</span><b>✦</b><span>GAMING EDITS</span><b>✦</b><span>YOUTUBE</span><b>✦</b><span>MOTION GRAPHICS</span><b>✦</b><span>SHORTS & REELS</span><b>✦</b><span>GAMING EDITS</span><b>✦</b><span>YOUTUBE</span><b>✦</b><span>MOTION GRAPHICS</span><b>✦</b></div></section>
+
+    <section id="work" class="work section">
+      <div class="section-intro reveal"><div><p class="eyebrow"><i></i> 01 / SELECTED WORK</p><h2>THE CUT<br><em>IS THE</em> <span>STATEMENT.</span></h2></div><p class="intro-note">Five real edits. Different formats.<br>One goal — make people stop scrolling.</p></div>
+      <div class="filter-row reveal"><div class="filters"><button class="active" data-filter="all">ALL <sup>05</sup></button><button data-filter="shorts">SHORTS <sup>03</sup></button><button data-filter="gaming">GAMING <sup>01</sup></button><button data-filter="motion">MOTION <sup>03</sup></button></div><span class="grid-label">DRAG / HOVER / PLAY</span></div>
+      <div class="project-grid" id="projectGrid">
+        <article class="project project-tall reveal" data-type="shorts motion" data-video="assets/EDIT.mp4" data-title="Coca-Cola Concept" data-cat="PRODUCT / MOTION / SHORT-FORM" data-cursor="OPEN">
+          <div class="project-media"><video muted loop playsinline poster="assets/EDIT.jpg" src="assets/EDIT.mp4"></video><div class="project-overlay"></div><span class="project-index">01</span><button class="open-project">↗</button><span class="play-hint">HOVER TO PLAY</span></div>
+          <div class="project-info"><div><span>PRODUCT / MOTION</span><h3>Coca-Cola Concept</h3></div><b>↗</b></div>
+        </article>
+        <article class="project project-wide reveal" data-type="gaming" data-video="assets/gaming.mp4" data-title="Game Edit" data-cat="GAMING / PACE / CAPTIONS" data-cursor="OPEN">
+          <div class="project-media"><video muted loop playsinline poster="assets/gaming.jpg" src="assets/gaming.mp4"></video><div class="project-overlay"></div><span class="project-index">02</span><button class="open-project">↗</button><span class="play-hint">HOVER TO PLAY</span></div>
+          <div class="project-info"><div><span>GAMING / PACE</span><h3>Game Edit</h3></div><b>↗</b></div>
+        </article>
+        <article class="project reveal" data-type="shorts" data-video="assets/patipolio.mp4" data-title="Personal Growth" data-cat="SHORT-FORM / STORYTELLING" data-cursor="OPEN">
+          <div class="project-media"><video muted loop playsinline poster="assets/patipolio.jpg" src="assets/patipolio.mp4"></video><div class="project-overlay"></div><span class="project-index">03</span><button class="open-project">↗</button><span class="play-hint">HOVER TO PLAY</span></div>
+          <div class="project-info"><div><span>SHORT-FORM</span><h3>Personal Growth</h3></div><b>↗</b></div>
+        </article>
+        <article class="project reveal" data-type="motion" data-video="assets/portfolio.mp4" data-title="Portfolio Motion" data-cat="MOTION / TRANSITIONS / DESIGN" data-cursor="OPEN">
+          <div class="project-media"><video muted loop playsinline poster="assets/portfolio.jpg" src="assets/portfolio.mp4"></video><div class="project-overlay"></div><span class="project-index">04</span><button class="open-project">↗</button><span class="play-hint">HOVER TO PLAY</span></div>
+          <div class="project-info"><div><span>MOTION DESIGN</span><h3>Portfolio Motion</h3></div><b>↗</b></div>
+        </article>
+        <article class="project project-wide reveal" data-type="shorts motion" data-video="assets/potopolio.mp4" data-title="Creative Short" data-cat="SHORT-FORM / RHYTHM / VISUALS" data-cursor="OPEN">
+          <div class="project-media"><video muted loop playsinline poster="assets/potopolio.jpg" src="assets/potopolio.mp4"></video><div class="project-overlay"></div><span class="project-index">05</span><button class="open-project">↗</button><span class="play-hint">HOVER TO PLAY</span></div>
+          <div class="project-info"><div><span>SHORT-FORM / MOTION</span><h3>Creative Short</h3></div><b>↗</b></div>
+        </article>
       </div>
     </section>
 
-    <div class="ticker"><div class="ticker-track">EDIT · MOTION · COLOR · GAMING · SHORTS · STORY · YOUTUBE · EDIT · MOTION · COLOR · GAMING · SHORTS · STORY · YOUTUBE ·</div></div>
-
-    <section id="work" class="section container">
-      <div class="section-head reveal"><div><p class="eyebrow"><span></span> SELECTED WORK</p><h2>Made to <em>move.</em></h2></div><div class="count" id="projectCount">00 PROJECTS</div></div>
-      <div class="work-grid" id="workGrid"></div>
-      <div class="empty-work" id="emptyWork"><div>DROP YOUR MP4s<br>INTO <b>/assets</b></div><span>Add your MP4 to /assets, then add one line to PROJECTS in script.js.</span></div>
-    </section>
-
-    <section id="services" class="section services container">
-      <div class="section-head reveal"><div><p class="eyebrow"><span></span> WHAT I EDIT</p><h2>Built for <em>attention.</em></h2></div></div>
-      <div class="service-grid reveal">
-        <article><span>01</span><h3>Shorts / Reels</h3><p>Fast pacing, captions, hooks, sound design and visual rhythm built for short-form.</p><b>01 — 04</b></article>
-        <article><span>02</span><h3>Gaming Edits</h3><p>High-energy cuts, beat sync, effects and motion that make gameplay feel bigger.</p><b>02 — 04</b></article>
-        <article><span>03</span><h3>YouTube Videos</h3><p>Clean storytelling, pacing, transitions and visual polish that keeps viewers watching.</p><b>03 — 04</b></article>
-        <article><span>04</span><h3>Motion Graphics</h3><p>Animated typography, shapes, transitions and experimental visuals for standout moments.</p><b>04 — 04</b></article>
+    <section id="services" class="services section">
+      <div class="services-head reveal"><p class="eyebrow dark"><i></i> 02 / WHAT I DO</p><h2>BUILT FOR<br><span>ATTENTION.</span></h2></div>
+      <div class="service-stack">
+        <div class="service reveal"><div class="service-no">01</div><h3>Shorts <em>/ Reels</em></h3><p>Fast hooks, sharp captions, punchy pacing and visual rhythm made for vertical screens.</p><b>↗</b></div>
+        <div class="service reveal"><div class="service-no">02</div><h3>Gaming</h3><p>Gameplay cuts, reactions, subtitles and impact moments timed to keep the energy high.</p><b>↗</b></div>
+        <div class="service reveal"><div class="service-no">03</div><h3>YouTube</h3><p>Long-form storytelling with clean pacing, visual variety and edits that never lose the thread.</p><b>↗</b></div>
+        <div class="service reveal"><div class="service-no">04</div><h3>Motion <em>Graphics</em></h3><p>Animated type, transitions and graphic moments that make footage feel unmistakably yours.</p><b>↗</b></div>
       </div>
     </section>
 
-    <section id="about" class="section about container">
-      <div class="about-title reveal"><p class="eyebrow"><span></span> ABOUT ARYAN</p><h2>Editor first.<br><em>Experiment always.</em></h2></div>
-      <div class="about-copy reveal"><p>I’m Aryan Ogra, a video editor who likes edits that feel alive. I mix clean storytelling with colorful visuals, energetic pacing and motion graphics.</p><p>My main tool is <strong>CapCut</strong>, and I’m always experimenting with new ways to make a frame more interesting without losing the story.</p><div class="skill-pills"><span>Video Editing</span><span>Motion Graphics</span><span>Color</span><span>Sound Design</span><span>Transitions</span><span>Visual Storytelling</span></div></div>
+    <section id="about" class="about section">
+      <div class="about-big reveal">AO</div>
+      <div class="about-content reveal"><p class="eyebrow dark"><i></i> 03 / ABOUT ARYAN</p><h2>EDITOR.<br><span>CREATOR.</span><br>DETAIL-OBSESSED.</h2><p>I’m Aryan Ogra, a video editor focused on turning ordinary footage into energetic, scroll-stopping content. I work across short-form, gaming, YouTube and motion graphics, with CapCut as my main editing tool.</p><div class="skills"><span>CAPCUT</span><span>SHORT-FORM</span><span>MOTION</span><span>STORYTELLING</span><span>VISUAL RHYTHM</span></div></div>
     </section>
 
-    <section class="showreel container reveal"><div class="showreel-inner"><div><p class="eyebrow"><span></span> BEST OF THE BEST</p><h2>One edit.<br><em>All the energy.</em></h2></div><button class="reel-btn magnetic" id="reelBtn">PLAY SHOWREEL <span>▶</span></button></div></section>
-
-    <section id="contact" class="contact container reveal">
-      <p class="eyebrow"><span></span> HAVE A PROJECT?</p><h2>Let’s make something<br><em>people remember.</em></h2>
-      <div class="contact-grid">
-        <div class="contact-info"><a class="contact-link" href="mailto:duskfacts@gmail.com">duskfacts@gmail.com <span>↗</span></a><div class="discord">DISCORD <b>@aryanogra</b></div><p>Tell me what you're making, what footage you have, and the kind of energy you want. I’ll get back to you by email.</p></div>
-        <form class="contact-form" action="mailto:duskfacts@gmail.com" method="post" enctype="text/plain"><input name="Name" placeholder="Your name" required><input name="Project" placeholder="What do you need edited?" required><textarea name="Message" rows="5" placeholder="Tell me about the project..." required></textarea><button class="btn btn-primary" type="submit">Request an edit ↗</button></form>
-      </div>
+    <section id="contact" class="contact section">
+      <div class="contact-copy reveal"><p class="eyebrow"><i></i> 04 / START A PROJECT</p><h2>GOT<br>FOOTAGE?<br><span>LET'S CUT IT.</span></h2><p>Have an edit in mind? Send the brief and let’s turn the raw footage into something people remember.</p><div class="contact-links"><a class="magnetic" href="mailto:duskfacts@gmail.com"><span>duskfacts@gmail.com</span><b>↗</b></a><a class="magnetic" href="https://discord.com/users/aryanogra" target="_blank" rel="noopener"><span>DISCORD · @aryanogra</span><b>↗</b></a></div></div>
+      <form class="request reveal" id="requestForm"><div class="form-top"><span>QUICK BRIEF</span><b>01 / 03</b></div><label>YOUR NAME<input name="name" required placeholder="Aryan's next client"></label><label>YOUR EMAIL<input type="email" name="email" required placeholder="you@example.com"></label><label>WHAT ARE WE EDITING?<textarea name="message" required rows="5" placeholder="Tell me about the footage, platform, style or deadline..."></textarea></label><button class="submit magnetic" type="submit">SEND REQUEST <span>↗</span></button><small>This opens your email app with the brief ready to send.</small></form>
     </section>
   </main>
 
-  <footer class="footer container"><span>© 2026 ARYAN OGRA</span><span>VIDEO EDITOR · CAPCUT · MOTION</span><a href="#home">BACK TO TOP ↑</a></footer>
+  <footer><span>© 2026 ARYAN OGRA</span><span>VIDEO EDITOR / MOTION DESIGN</span><a href="#top">BACK TO TOP ↑</a></footer>
 
-  <div class="viewer" id="viewer" aria-hidden="true"><button class="viewer-close" id="viewerClose" aria-label="Close viewer">×</button><div class="viewer-content"><video id="viewerVideo" controls playsinline></video><div class="viewer-caption"><b id="viewerTitle"></b><span id="viewerCategory"></span></div></div></div>
+  <div class="modal" id="modal" aria-hidden="true"><button class="modal-close" aria-label="Close">×</button><div class="modal-inner"><div class="modal-meta"><span id="modalCat">PROJECT</span><h3 id="modalTitle">Project</h3></div><video id="modalVideo" controls playsinline></video></div></div>
   <script src="script.js"></script>
 </body>
 </html>
